@@ -1,23 +1,7 @@
-from contextlib import asynccontextmanager
-from functools import partial
 import strawberry
 from strawberry.types import Info
-from fastapi import FastAPI
-from strawberry.fastapi import BaseContext, GraphQLRouter
-from databases import Database
-
-from app.settings import Settings
-
-
-class Context(BaseContext):
-    db: Database
-
-    def __init__(
-        self,
-        db: Database,
-    ) -> None:
-        self.db = db
-
+from typing import Optional
+from app.graphql.context import Context
 
 
 @strawberry.type
@@ -38,9 +22,9 @@ class Query:
     async def books(
         self,
         info: Info[Context, None],
-        author_ids: list[int] | None = [],
-        search: str | None = None,
-        limit: int | None = None,
+        author_ids: Optional[list[int]] = None,
+        search: Optional[str] = None,
+        limit: Optional[int] = None,
     ) -> list[Book]:
         db = info.context.db
 
@@ -79,35 +63,3 @@ class Query:
             )
             for row in rows
         ]
-
-
-
-CONN_TEMPLATE = "postgresql+asyncpg://{user}:{password}@{host}:{port}/{name}"
-settings = Settings()  # type: ignore
-db = Database(
-    CONN_TEMPLATE.format(
-        user=settings.DB_USER,
-        password=settings.DB_PASSWORD,
-        port=settings.DB_PORT,
-        host=settings.DB_SERVER,
-        name=settings.DB_NAME,
-    ),
-)
-
-@asynccontextmanager
-async def lifespan(
-    app: FastAPI,
-    db: Database,
-):
-    async with db:
-        yield
-    await db.disconnect()
-
-schema = strawberry.Schema(query=Query)
-graphql_app = GraphQLRouter(  # type: ignore
-    schema,
-    context_getter=partial(Context, db),
-)
-
-app = FastAPI(lifespan=partial(lifespan, db=db))
-app.include_router(graphql_app, prefix="/graphql")

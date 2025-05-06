@@ -2,7 +2,7 @@ include .env
 export
 
 run:
-	poetry run uvicorn app.schema:app --reload
+	poetry run uvicorn app.main:app --reload
 
 fmt:
 	ruff check -s --fix --exit-zero .
