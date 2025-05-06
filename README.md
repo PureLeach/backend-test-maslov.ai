@@ -1,23 +1,137 @@
-TODO:
-- проставь энвы (см. .env.example)
-- запусти постгрю (тестилось на 15й версии, но другая тоже подойдет) и создай базу
-- прогони миграции
-- доделай ручку, к которой написан TODO комментарий
+# 📚 GraphQL Books API
 
-Как запустить приложение, прогнать линтер и миграции - см. Makefile
+A simple application on FastAPI + Strawberry GraphQL to retrieve a list of books and authors from PostgreSQL.
 
-За помощью обращайся к чему угодно, но начать лучше с документации:
-- [poetry](https://python-poetry.org/)
-- [yoyo](https://ollycope.com/software/yoyo/latest/)
-- [strawberry](https://strawberry.rocks/docs)
-- [graphql](https://graphql.org/learn/)
-- [fastapi](https://fastapi.tiangolo.com/)
-- [asyncpg](https://magicstack.github.io/asyncpg/current/)
-- [ruff](https://docs.astral.sh/ruff/)
-- [mypy](https://mypy.readthedocs.io/en/stable/getting_started.html)
+## 🚀 Technologies used
 
-Мы знаем, что наше тестовое может решить (или помочь решить) ChatGPT.
-Мы ок с использованием вспомогательных инструментов для разработки,
-но, пожалуйста, не делайте этого бездумно.
+- Python 3.12+
+- FastAPI
+- Strawberry (GraphQL)
+- PostgreSQL
+- Databases
+- asyncpg
+- yoyo (migrations)
+- ruff
+- mypy
 
-А есть ли в коде баги? Кто знает...
+
+## 📦 Installation and startup
+
+1. **Clone the repository:**
+
+```bash
+git clone https://github.com/PureLeach/backend-test-maslov.ai.git
+cd backend-test-maslov.ai
+````
+
+2. **Create and activate a virtual environment:**
+
+```bash
+poetry shell
+```
+
+3. **Install dependencies:**
+
+```bash
+poetry install
+```
+
+4. **Create'.env` or specify the environment variables:**
+
+
+```bash
+cp example.env .env
+```
+
+5. **Run PostgreSQL and apply migrations**
+
+```bash
+docker-compose up
+make migrate
+```
+
+6. **Start the app:**
+
+```bash
+make run
+```
+
+7. **Open GraphQL Playground:**
+
+Go to the browser: [http://localhost:8000/graphql](http://localhost:8000/graphql)
+
+---
+
+## 🔍 Examples of requests
+
+### 1. Get all the books
+```graphql
+query {
+  books {
+    title
+    author {
+      name
+    }
+  }
+}
+```
+
+### 2. Get books by author (e.g., Oscar Wilde - ID = 1)
+```graphql
+query {
+  books(authorIds: [1]) {
+    title
+    author {
+      name
+    }
+  }
+}
+```
+
+### 3. Search for books by part of title (case is not important)
+```graphql
+query {
+  books(search: "adventures") {
+    title
+    author {
+      name
+    }
+  }
+}
+```
+
+### 4. Get no more than 2 books
+```graphql
+query {
+  books(limit: 2) {
+    title
+    author {
+      name
+    }
+  }
+}
+```
+
+### 5. Combination of all filters
+```graphql
+query {
+  books(authorIds: [3], search: "Adventures", limit: 1) {
+    title
+    author {
+      name
+    }
+  }
+}
+```
+
+### 6. No match (empty result)
+```graphql
+query {
+  books(search: "Nonexistent") {
+    title
+    author {
+      name
+    }
+  }
+}
+```
