@@ -29,6 +29,8 @@ cd backend-test-maslov.ai
 
 ```bash
 poetry shell
+
+NOTE: If it doesn't work, install plugin `poetry self add poetry-plugin-shell`
 ```
 
 3. **Install dependencies:**
