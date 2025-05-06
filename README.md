@@ -136,3 +136,9 @@ query {
   }
 }
 ```
+
+## 🌐 Interfaces
+
+- Swagger UI: http://localhost:8000/docs
+- Strawberry GraphiQL playground: http://localhost:8000/graphql
+- pgAdmin: http://localhost:5050
