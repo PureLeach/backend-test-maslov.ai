@@ -40,7 +40,7 @@ poetry install
 
 
 ```bash
-cp example.env .env
+cp .env.example .env
 ```
 
 5. **Run PostgreSQL and apply migrations**
