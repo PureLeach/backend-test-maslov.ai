@@ -13,6 +13,7 @@ A simple application on FastAPI + Strawberry GraphQL to retrieve a list of books
 - yoyo (migrations)
 - ruff
 - mypy
+- docker-compose
 
 
 ## 📦 Installation and startup
@@ -46,7 +47,7 @@ cp .env.example .env
 5. **Run PostgreSQL and apply migrations**
 
 ```bash
-docker-compose up
+docker-compose up -d
 make migrate
 ```
 
